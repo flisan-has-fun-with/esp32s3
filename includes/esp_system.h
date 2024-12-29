@@ -1,1 +1,0 @@
-../.embuild/espressif/esp-idf/v5.2.2/components/esp_system/include/esp_system.h

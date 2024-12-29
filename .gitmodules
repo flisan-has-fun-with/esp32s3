@@ -2,6 +2,4 @@
 	path = vendor/LilyGo-EPD47
 	url = https://github.com/flisan-has-fun-with/LilyGo-EPD47
 	branch = esp32s3
-[submodule "vendor/esp-idf"]
-	path = vendor/esp-idf
-	url = https://github.com/espressif/esp-idf
+
