@@ -4,7 +4,7 @@ use std::{
 };
 
 use anyhow::{ensure, Result};
-use esp_idf_svc::sys::{heap_caps_free, heap_caps_malloc, MALLOC_CAP_DEFAULT, MALLOC_CAP_SPIRAM};
+use esp_idf_svc::sys::{heap_caps_free, heap_caps_malloc, MALLOC_CAP_SPIRAM};
 
 pub struct AllocatedMemory<T, const S: usize> {
     memory: *mut [T; S],

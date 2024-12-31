@@ -1,22 +1,16 @@
 use glob::glob;
 
-pub fn compile_vendor_lib() {
-    let manifest_path: &'static str = env!("CARGO_MANIFEST_DIR");
-    let esp_idf_sys_sdkconfig = glob(&format!("{manifest_path}/target/xtensa-esp32s3-espidf/debug/build/esp-idf-sys-*/out/build/bootloader/config"))
-        .unwrap()
-        .next()
-        .unwrap()
-        .unwrap();
-    let esp_idf_sys_sdkconfig = esp_idf_sys_sdkconfig.to_str().unwrap();
+use crate::{env::{edp47_lib, esp_idf_component, esp_idf_sdkconfig, espressif_utils, workspace_root}, traitext::PathExt};
 
-    let sources = glob(&format!("{manifest_path}/vendor/LilyGo-EPD47/src/*.c"))
+pub fn compile_vendor_lib() {
+    let sources = glob(&edp47_lib().join("src/*.c").coerce_to_string())
         .unwrap()
         .map(|path| path.unwrap().to_str().unwrap().to_string());
 
     cc::Build::new()
         .files(sources)
         .includes(
-            glob(&format!("{manifest_path}/.embuild/espressif/esp-idf/v5.2.2/components/**/include"))
+            glob(&format!("{}/**/include", esp_idf_component("").coerce_to_string()))
                 .unwrap()
                 .map(|path| path.unwrap())
                 .filter(|path| {
@@ -28,17 +22,26 @@ pub fn compile_vendor_lib() {
                 })
                 .map(|path| path.to_str().unwrap().to_string())
         )
-        .include(esp_idf_sys_sdkconfig)
-        .include(format!("{manifest_path}/.embuild/espressif/esp-idf/v5.2.2/components/driver/deprecated"))
-        .include(format!("{manifest_path}/.embuild/espressif/esp-idf/v5.2.2/components/esp_rom/include/esp32s3"))
-        .include(format!("{manifest_path}/.embuild/espressif/esp-idf/v5.2.2/components/newlib/platform_include"))
-        .include(format!("{manifest_path}/.embuild/espressif/esp-idf/v5.2.2/components/freertos/config/include/freertos"))
-        .include(format!("{manifest_path}/.embuild/espressif/esp-idf/v5.2.2/components/freertos/FreeRTOS-Kernel/portable/xtensa/include/freertos"))
+        .include(esp_idf_sdkconfig().coerce_to_string())
+        .include(esp_idf_component("driver").join("deprecated").coerce_to_string())
+        .include(esp_idf_component("esp_rom").join("include/esp32s3").coerce_to_string())
+        .include(esp_idf_component("freertos").join("config/include/freertos").coerce_to_string())
+        .include(esp_idf_component("freertos").join("FreeRTOS-Kernel/portable/xtensa/include/freertos").coerce_to_string())
+        .include(esp_idf_component("newlib").join("platform_include").coerce_to_string())
         .flag("-Wno-unused-parameter")
         .flag("-Wno-sign-compare")
+        .flag("-Wno-attributes")  // section attributes are causing errors.
+        .flag("-Wno-cpp")  // Some header files is deprecated
+        .flag("-Wno-implicit-function-declaration")  // xTaskCreatePinnedToCore is not resolved
+                                                     // at compile time
         .flag("-mlongcalls")
-        .compiler(format!("{manifest_path}/.embuild/espressif/tools/xtensa-esp-elf/esp-13.2.0_20230928/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc"))
+        .compiler(
+            espressif_utils()
+                .join("tools/xtensa-esp-elf/esp-13.2.0_20230928/xtensa-esp-elf/bin/xtensa-esp32s3-elf-gcc")
+                .coerce_to_string()
+        )
         .compile("edp47");
 
     println!("cargo:rustc-link-arg=-mlongcalls");
+    println!("cargo:check-if-changed={}", workspace_root().join("sdkconfig.defaults").coerce_to_string());
 }

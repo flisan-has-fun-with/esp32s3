@@ -21,10 +21,6 @@ impl Framebuffer {
         self.0.copy_from_slice(slice);
     }
 
-    pub fn fill(&mut self, value: uint_fast8_t) {
-        self.0.fill(value);
-    }
-
     pub unsafe fn to_point(&mut self) -> *mut u8 {
         self.0.memory()
     }

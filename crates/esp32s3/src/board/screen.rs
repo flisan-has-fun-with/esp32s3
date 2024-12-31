@@ -7,17 +7,15 @@ use std::convert::Infallible;
 
 use anyhow::Result;
 use bindings::{
-    epd_clear, epd_draw_grayscale_image, epd_draw_hline, epd_full_screen, epd_init, epd_poweroff,
+    epd_clear, epd_draw_grayscale_image, epd_full_screen, epd_init, epd_poweroff,
     epd_poweron, EPD_HEIGHT, EPD_WIDTH,
 };
 use embedded_graphics::{
-    geometry::AnchorPoint,
-    pixelcolor::{raw::ToBytes, Gray4},
+    pixelcolor::Gray4,
     prelude::{Dimensions, DrawTarget, GrayColor, Point, Size},
     primitives::Rectangle,
     Pixel,
 };
-use esp_idf_svc::sys::esp_random;
 use ffi::Framebuffer;
 
 use crate::image::FullScreenImage;

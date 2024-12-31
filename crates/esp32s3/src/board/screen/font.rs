@@ -1,15 +1,11 @@
-use std::fmt::{Debug, Display};
-
-use embedded_graphics::{pixelcolor::Gray4, prelude::{Dimensions, DrawTarget, Point}, primitives::Rectangle};
+use embedded_graphics::{prelude::{Dimensions, DrawTarget, Point}, primitives::Rectangle};
 use u8g2_fonts::{
     types::{FontColor, HorizontalAlignment, VerticalPosition},
     Content, Font, FontRenderer, LookupError,
 };
 
-pub struct NoGlphyFoundError(char);
-
 pub enum RenderingIssue {
-    GlyphMissing(char),
+    GlyphMissing,
     NothingRendered,
 }
 
@@ -78,8 +74,8 @@ impl<C: Content + Clone> FontPlanner<C> {
 
         let test_render_result = match test_render {
             Ok(result) => result,
-            Err(LookupError::GlyphNotFound(ch)) => {
-                return Some(RenderingIssue::GlyphMissing(ch));
+            Err(LookupError::GlyphNotFound(_)) => {
+                return Some(RenderingIssue::GlyphMissing);
             }
         };
 

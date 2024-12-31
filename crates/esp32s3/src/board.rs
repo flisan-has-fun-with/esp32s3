@@ -1,7 +1,6 @@
-use std::{ops::DerefMut, sync::Arc};
+use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use esp_idf_svc::hal::prelude::Peripherals;
 use screen::EPaper;
 use tokio::sync::Mutex;
 
