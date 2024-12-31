@@ -2,7 +2,7 @@ use std::{ops::DerefMut, sync::Arc};
 
 use anyhow::{Context, Result};
 use esp_idf_svc::hal::prelude::Peripherals;
-use screen::Screen;
+use screen::EPaper;
 use tokio::sync::Mutex;
 
 pub mod screen;
@@ -14,28 +14,26 @@ pub struct Board {
 
 #[derive(Clone)]
 pub(crate) struct BoardState {
-    pub(self) screen: Arc<Mutex<Screen>>,
+    pub(self) e_paper: Arc<Mutex<EPaper>>,
 }
 
 impl Board {
     pub fn new() -> Result<Self> {
         log::info!("Board is being initialized.");
-    
+
         // let per = Peripherals::take().unwrap();
 
         log::info!("Initializing screen...");
-        let screen = Screen::new()
-            .context("Failed to initialize the screen")?;
+        let screen = EPaper::new().context("Failed to initialize the screen")?;
 
         Ok(Self {
             state: BoardState {
-                screen: Arc::new(Mutex::new(screen)),
-            }
+                e_paper: Arc::new(Mutex::new(screen)),
+            },
         })
     }
 
-    pub fn screen(&self) -> Arc<Mutex<Screen>> {
-        self.state.screen.clone()
+    pub fn e_paper(&self) -> Arc<Mutex<EPaper>> {
+        self.state.e_paper.clone()
     }
 }
-

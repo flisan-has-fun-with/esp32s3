@@ -33,6 +33,8 @@ ws2812-esp32-rmt-driver = { version = "0.10.0", features = ["smart-leds-trait"] 
 smart-leds-trait = "0.3.0"
 embedded-graphics = "0.8.1"
 cc = "=1.1.30"
+embedded-graphics-core = "0.4.0"
+u8g2-fonts = { version = "0.5.1", features = ["std"] }
 
 [build-dependencies]
 embuild = "0.32.0"

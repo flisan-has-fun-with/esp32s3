@@ -9,4 +9,3 @@ fn main() {
     build_vendor::compile_vendor_lib();
     png::build();
 }
-

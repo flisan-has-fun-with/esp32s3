@@ -7,11 +7,10 @@ pub fn compile_vendor_lib() {
         .next()
         .unwrap()
         .unwrap();
-    let esp_idf_sys_sdkconfig = esp_idf_sys_sdkconfig
-        .to_str()
-        .unwrap();
+    let esp_idf_sys_sdkconfig = esp_idf_sys_sdkconfig.to_str().unwrap();
 
-    let sources = glob(&format!("{manifest_path}/vendor/LilyGo-EPD47/src/*.c")).unwrap()
+    let sources = glob(&format!("{manifest_path}/vendor/LilyGo-EPD47/src/*.c"))
+        .unwrap()
         .map(|path| path.unwrap().to_str().unwrap().to_string());
 
     cc::Build::new()

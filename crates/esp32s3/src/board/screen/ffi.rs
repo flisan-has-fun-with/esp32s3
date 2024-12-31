@@ -1,10 +1,13 @@
 use anyhow::Result;
 
-use super::{bindings::{uint_fast8_t, EPD_HEIGHT, EPD_WIDTH}, memory::AllocatedMemory};
+use super::{
+    bindings::{uint_fast8_t, EPD_HEIGHT, EPD_WIDTH},
+    memory::AllocatedMemory,
+};
 
 pub const FRAMEBUFFER_SIZE: usize = (EPD_WIDTH / 2 * EPD_HEIGHT) as usize;
 
-pub struct Framebuffer(AllocatedMemory<uint_fast8_t, FRAMEBUFFER_SIZE>);
+pub struct Framebuffer(pub(super) AllocatedMemory<uint_fast8_t, FRAMEBUFFER_SIZE>);
 
 impl Framebuffer {
     pub fn new() -> Result<Self> {
@@ -26,4 +29,3 @@ impl Framebuffer {
         self.0.memory()
     }
 }
-

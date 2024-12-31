@@ -1,5 +1,5 @@
 [submodule "vendor/LilyGo-EPD47"]
-	path = vendor/LilyGo-EPD47
+	path = crates/esp32s3/vendor/LilyGo-EPD47
 	url = https://github.com/flisan-has-fun-with/LilyGo-EPD47
 	branch = esp32s3
 
